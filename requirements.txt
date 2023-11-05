@@ -3,5 +3,7 @@ geopandas
 matplotlib
 pandas
 jupyter
-git+https://github.com/marceloprates/prettymaps.git
+
+
+# git+https://github.com/marceloprates/prettymaps.git
 
