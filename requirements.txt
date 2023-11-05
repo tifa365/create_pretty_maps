@@ -1,0 +1,5 @@
+osmnx
+geopandas
+matplotlib
+pandas
+git+https://github.com/marceloprates/prettymaps.git
