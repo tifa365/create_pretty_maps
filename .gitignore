@@ -1,3 +1,8 @@
+# R
+training_script_R/.RData
+training_script_R/.Rhistory
+
+
 # Ignore cache directory
 /training_scripts/cache/
 
