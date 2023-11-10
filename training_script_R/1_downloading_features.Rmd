@@ -1,0 +1,97 @@
+---
+title: "Downloading Map Features with OpenStreetMap in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Set global chunk options
+knitr::opts_chunk$set(echo = TRUE)
+
+# Function to check and install packages
+check_and_install <- function(package) {
+  if (!require(package, character.only = TRUE)) {
+    install.packages(package)
+    library(package, character.only = TRUE)
+  }
+}
+
+# List of packages to check and install
+packages <- c("osmdata", "sf", "ggplot2", "leaflet", "dplyr")
+
+# Apply the function to each package
+lapply(packages, check_and_install)
+
+```
+
+As a guide, use https://rspatialdata.github.io/osm.html
+
+## Import of necessary libraries
+
+The `osmdata` package in R can be used to download data from OpenStreetMap, similar to `osmnx` in Python. We will also use `sf` for handling spatial data, `ggplot2` for plotting, and `dplyr` for data manipulation.
+
+## Using the osmdata R package to download a single OpenStreetmap feature
+
+OpenStreetMap data can be accessed in R using the `osmdata` package. This package makes it easier to make Overpass API calls to download OSM data. We will download the outline of the hospital called "Klinikum Magdeburg" as an example.
+
+```{r download-feature}
+# Geocode the hospital
+hospital_query <- opq(bbox = 'Magdeburg, Germany') %>%
+                  add_osm_feature(key = 'name', value = 'Klinikum Magdeburg') %>%
+                  osmdata_sf()
+
+# Extract the hospital data
+hospital <- hospital_query$osm_polygons
+
+# Plot the hospital
+ggplot(data = hospital) +
+  geom_sf() +
+  theme_void()
+```
+
+Congratulations, you have downloaded and already visualized your first feature! If you still have some time to spare, you can continue on your own, for example, geocode a feature from your current place of living or home town, or continue with one of the following tasks.
+
+## Coloring the feature differently
+
+We can use the `ggplot2` library to color the features. Let's color the hospital red.
+
+```{r color-feature}
+ggplot(data = hospital) +
+  geom_sf(fill="red") +
+  theme_void()
+```
+
+## Display the hospital in the context of Magdeburg
+
+We can use the `leaflet` library to add a little bit of interactivity.
+
+```{r anchor feature in Magdeburg}
+# Coordinates of Magdeburg
+magdeburg_latitude <- 52.1205333
+magdeburg_longitude <- 11.6276237
+
+# Define a bounding box around Magdeburg
+expanded_bbox <- c(magdeburg_longitude - 0.05, magdeburg_latitude - 0.05, 
+                   magdeburg_longitude + 0.05, magdeburg_latitude + 0.05)
+
+# Geocode the hospital with the expanded bbox
+hospital_query <- opq(bbox = expanded_bbox) %>%
+                  add_osm_feature(key = 'name', value = 'Klinikum Magdeburg') %>%
+                  osmdata_sf()
+hospital <- hospital_query$osm_polygons
+
+# Create a leaflet map
+leaflet(data = hospital) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addPolygons(data = hospital, color = "#ff7800", weight = 2, fillOpacity = 0.5, smoothFactor = 0.5) %>%
+  setView(lng = magdeburg_longitude, lat = magdeburg_latitude, zoom = 12)
+```
+
+## Extra credit
+
+If you've reached this point, you're likely already familiar with OpenStreetMap and the osmdata package or a fast learner. Here are some additional tasks:
+
+1. Download and visualize all hospitals in Magdeburg.
+2. Download Magdeburg's street network and color it according to your preference.
+3. Download Magdeburg's rivers and color them blue.
+4. Combine the city's main boundary with all these features on a single map.
