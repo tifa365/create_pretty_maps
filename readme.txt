@@ -7,5 +7,6 @@ To code along, you will need a Github account and familiarize yourself shortly w
 5. Don’t worry, the Codespace will take a while to load when installing
 6. Try to run the code
 7. You can also clone the repo and run your own virtual environment locally but I would not recommend
+8. If you are working with R, open the training_script_R and try to run the script
 
 We will mostly be working with the first two scripts in the "training_scripts" folder. The third is optional and dives deep into using the prettymaps-package which you have to run in a separate Google Colab script or your own virtual environment.
