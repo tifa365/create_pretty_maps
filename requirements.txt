@@ -4,6 +4,5 @@ matplotlib
 pandas
 jupyter
 
-
 # git+https://github.com/marceloprates/prettymaps.git
 
